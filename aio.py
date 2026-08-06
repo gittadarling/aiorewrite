@@ -1036,6 +1036,51 @@ def run_pygame_launcher(target):
         print(f"Target '{target}' not found (not a local file, git repo, or built-in example). Cannot launch.")
 
 
+def find_module_name(dist_name):
+    """Resolve the importable module name(s) for an installed distribution.
+
+    PyPI package names frequently differ from their module names (e.g. the
+    'PyGameLab' distribution provides the 'pygamelab' module), so the
+    launch logic resolves the real module before running ``python -m``.
+    Returns a list ordered by likelihood; the first importable entry wins.
+    """
+    candidates = [dist_name]
+    try:
+        from importlib.metadata import packages_distributions
+        for mod, dists in packages_distributions().items():
+            if any(d.lower() == dist_name.lower() for d in dists) and mod not in candidates:
+                candidates.append(mod)
+    except Exception:
+        pass
+    try:
+        from importlib.metadata import files
+        for f in files(dist_name) or []:
+            if str(f).endswith("top_level.txt"):
+                for ln in (f.read_text() or "").splitlines():
+                    ln = ln.strip()
+                    if ln and ln not in candidates:
+                        candidates.append(ln)
+    except Exception:
+        pass
+    ordered = sorted(candidates, key=lambda c: (c.lower() != dist_name.lower(), c.lower()))
+    importable = [c for c in ordered if importlib.util.find_spec(c) is not None]
+    return importable or ordered
+
+def _is_runnable_module(mod):
+    """True if `python -m <mod>` can execute it (module, or package with __main__)."""
+    try:
+        spec = importlib.util.find_spec(mod)
+    except Exception:
+        return False
+    if spec is None:
+        return False
+    if spec.submodule_search_locations is not None:
+        try:
+            return importlib.util.find_spec(mod + ".__main__") is not None
+        except Exception:
+            return False
+    return True
+
 def launch_game(ref):
     """Launch a pygame by name or listing number."""
     entry = resolve_games_entry(ref)
@@ -1048,8 +1093,20 @@ def launch_game(ref):
     elif kind == "pypi":
         print(f"--- Ensuring '{label}' is installed ---")
         if ensure_package(label):
-            print(f"Launching {label} via python -m {label} ...")
-            subprocess.run([PYTHON_EXE, "-m", label])
+            module = None
+            for cand in find_module_name(label):
+                if _is_runnable_module(cand):
+                    module = cand
+                    break
+            if module is None:
+                importable = [c for c in find_module_name(label) if importlib.util.find_spec(c) is not None]
+                print(f"Package '{label}' is installed but has no runnable entry point"
+                      f" (no __main__, likely a library).")
+                if importable:
+                    print(f"  Importable modules: {', '.join(importable)}")
+                return
+            print(f"Launching {module} via python -m {module} ...")
+            run_with_auto_install([PYTHON_EXE, "-m", module], f"python -m {module}")
         else:
             print(f"Failed to install/launch {label}.")
     elif kind in ("github", "awesome"):
