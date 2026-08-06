@@ -1,0 +1,6 @@
+pygame
+jinja2
+cython
+pystray
+pillow
+pandas

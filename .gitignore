@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+aio_bin
+aio_bin.c
+aiorewrite
+pygame_games_cache.json
+pyg.error
+test_pypi.py
+cairo
+gi-repo
+indicator
+lib-indicator
+pygobject
