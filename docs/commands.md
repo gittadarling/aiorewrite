@@ -70,5 +70,6 @@ is retried once.
 | `GET /` | the web UI (four cards + control panel) |
 | `GET /api/launch?name=<name-or-number>` | launch a game |
 | `GET /api/install?name=<name-or-number>` | install a game |
+| `GET /api/status?after=<index>` | poll launch/install results (JSON, polled by the UI every second) |
 
 Default port **8080**; override with `--wui <port>`.

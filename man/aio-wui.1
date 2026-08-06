@@ -34,10 +34,15 @@ buttons.
 The web UI.
 .TP
 .B GET /api/launch?name=<name-or-number>
-Launch the named or numbered game and return a message.
+Launch the named or numbered game and return a message. The result is
+streamed to the status pane via the status endpoint.
 .TP
 .B GET /api/install?name=<name-or-number>
 Install the named or numbered game and return a message.
+.TP
+.B GET /api/status?after=<index>
+Return JSON entries since the given log index; the web UI polls this every
+second so launch and install results appear live in the browser.
 .SH SEE ALSO
 .BR aio (1),
 .BR aio-gui (1),

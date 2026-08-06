@@ -1188,8 +1188,7 @@ def run_wui(port=8080):
         f"<li onclick=\"doName('launch','{r['repo']}')\" title=\"launch\">{r['repo']}"
         f" <em>{r['desc']}</em></li>" for r in games["awesome"])
 
-    html_content = f"""
-    <!DOCTYPE html>
+    html_content = f"""    <!DOCTYPE html>
     <html>
     <head>
         <title>AIO Web UI</title>
@@ -1205,25 +1204,34 @@ def run_wui(port=8080):
             button {{ padding: 12px 24px; margin: 10px; cursor: pointer; border: none; background: #bb86fc; color: #000; font-weight: bold; border-radius: 4px; font-size: 16px; transition: 0.3s; }}
             button:hover {{ background: #3700b3; color: white; }}
             input {{ padding: 12px; width: 260px; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #fff; }}
-            #status {{ margin-top: 20px; color: #03dac6; font-family: monospace; }}
+            #status {{ margin-top: 20px; color: #03dac6; font-family: monospace; text-align: left; max-height: 220px; overflow-y: auto; white-space: pre-wrap; }}
         </style>
         <script>
+            var lastStatus = -1;
             function doAction(action) {{
-                document.getElementById('status').innerText = "Running " + action + "...";
-                fetch('/api/' + action)
-                    .then(r => r.text())
-                    .then(t => {{ document.getElementById('status').innerText = "> " + t; }});
+                fetch('/api/' + action).catch(function(){{}});
             }}
             function doName(action, name) {{
-                document.getElementById('status').innerText = "Running " + action + " " + name + "...";
-                fetch('/api/' + action + '?name=' + encodeURIComponent(name))
-                    .then(r => r.text())
-                    .then(t => {{ document.getElementById('status').innerText = "> " + t; }});
+                fetch('/api/' + action + '?name=' + encodeURIComponent(name)).catch(function(){{}});
             }}
             function doInput(action) {{
                 var name = document.getElementById('name').value;
                 if (name) doName(action, name);
             }}
+            function pollStatus() {{
+                fetch('/api/status?after=' + lastStatus)
+                    .then(r => r.json())
+                    .then(lines => {{
+                        var el = document.getElementById('status');
+                        for (var k = 0; k < lines.length; k++) {{
+                            lastStatus = lines[k][0];
+                            el.innerText += '\\n' + lines[k][1];
+                        }}
+                        el.scrollTop = el.scrollHeight;
+                    }})
+                    .catch(function(){{}});
+            }}
+            setInterval(pollStatus, 1000);
         </script>
     </head>
     <body>
@@ -1256,13 +1264,48 @@ def run_wui(port=8080):
                 <button onclick="doInput('install')">Install</button>
                 <button onclick="doAction('doctor')">Run System Doctor</button>
                 <button onclick="doAction('launch_alien')">Launch Alien Pygame</button>
-                <div id="status">Ready.</div>
+                <pre id="status">Ready.</pre>
             </div>
         </div>
     </body>
     </html>
     """
     
+    wui_log = []
+    wui_lock = threading.Lock()
+
+    def _log_wui(msg):
+        with wui_lock:
+            wui_log.append([len(wui_log), msg])
+            if len(wui_log) > 500:
+                del wui_log[:len(wui_log) - 500]
+
+    def _wui_launch(name):
+        import io
+        import contextlib
+        _log_wui(f"launch {name}: starting ...")
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+                launch_game(name)
+            out = buf.getvalue().strip()
+            _log_wui(f"launch {name}: {out or 'finished'}")
+        except Exception as e:
+            _log_wui(f"launch {name}: ERROR {e}")
+
+    def _wui_install(name):
+        import io
+        import contextlib
+        _log_wui(f"install {name}: starting ...")
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+                run_install([name])
+            out = buf.getvalue().strip()
+            _log_wui(f"install {name}: {out or 'finished'}")
+        except Exception as e:
+            _log_wui(f"install {name}: ERROR {e}")
+
     class Handler(http.server.SimpleHTTPRequestHandler):
         def log_message(self, format, *args):
             pass # Suppress logging to console
@@ -1282,22 +1325,37 @@ def run_wui(port=8080):
                             k, v = kv.split('=', 1)
                             query[k] = v
                 action = path.split('/')[-1]
+
+                if action == 'status':
+                    try:
+                        after = int(query.get('after', '-1'))
+                    except ValueError:
+                        after = -1
+                    with wui_lock:
+                        lines = [[i, m] for i, m in wui_log if i > after]
+                    self.send_response(200)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(json.dumps(lines).encode('utf-8'))
+                    return
+
                 self.send_response(200)
                 self.send_header('Content-type', 'text/plain')
                 self.end_headers()
-                
+
                 if action == 'doctor':
+                    _log_wui("doctor: system is healthy, all checks passed.")
                     self.wfile.write(b"System is healthy! All checks passed.")
                 elif action == 'launch_alien':
-                    threading.Thread(target=run_pygame_launcher, args=("aliens",), daemon=True).start()
+                    threading.Thread(target=_wui_launch, args=("aliens",), daemon=True).start()
                     self.wfile.write(b"Launching Pygame Alien Example...")
                 elif action == 'launch':
                     name = query.get('name', '')
-                    threading.Thread(target=launch_game, args=(name,), daemon=True).start()
+                    threading.Thread(target=_wui_launch, args=(name,), daemon=True).start()
                     self.wfile.write(f"Launching {name}...".encode('utf-8'))
                 elif action == 'install':
                     name = query.get('name', '')
-                    threading.Thread(target=run_install, args=([name],), daemon=True).start()
+                    threading.Thread(target=_wui_install, args=(name,), daemon=True).start()
                     self.wfile.write(f"Installing {name}...".encode('utf-8'))
                 else:
                     self.wfile.write(b"Unknown action")

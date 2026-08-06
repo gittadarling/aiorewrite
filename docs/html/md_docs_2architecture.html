@@ -155,7 +155,7 @@ Interfaces</h1>
 <li><b>TUI</b> — curses; <span class="tt">tui_pick</span> is the shared picker for all four sources; key shortcuts <span class="tt">l/p/g/a/i/v/q</span>.</li>
 <li><b>GUI</b> — tkinter ttk notebook, one tab per source; launch/install run on a worker thread so the UI stays responsive.</li>
 <li><b>WUI</b> — stdlib <span class="tt">http.server</span>/<span class="tt">socketserver</span> (no dependencies); card list<ul>
-<li><span class="tt">/api/launch</span> + <span class="tt">/api/install</span>. Port from <span class="tt">--wui &lt;port&gt;</span>, default 8080.</li>
+<li><span class="tt">/api/launch</span> + <span class="tt">/api/install</span> + <span class="tt">/api/status</span> (live result streaming). Port from <span class="tt">--wui &lt;port&gt;</span>, default 8080.</li>
 </ul>
 </li>
 <li><b>Tray</b> — pystray; every "Launch &lt;mode&gt;" item calls <span class="tt">_spawn_mode()</span> which re-invokes the app (<span class="tt">sys.argv[0]</span>) with the corresponding flag in a new process, so each mode is independent.</li>

@@ -181,11 +181,12 @@ GUI (<span class="tt">--gui</span>)</h2>
 <p>ttk notebook with one tab per source (counts in the tab titles). Buttons: <b>System Doctor</b>, <b>Launch Selected</b>, <b>Install Selected</b>, <b>Open in Browser</b>, <b>Exit</b>.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
 WUI (<span class="tt">--wui [port]</span>)</h2>
-<p>Serves four cards (one per source, click any item to launch) plus a name/number input with Launch / Install buttons.</p>
+<p>Serves four cards (one per source, click any item to launch) plus a name/number input with Launch / Install buttons. Results stream live into the status pane.</p>
 <ul>
 <li><span class="tt">GET /</span> — the UI</li>
 <li><span class="tt">GET /api/launch?name=&lt;name-or-number&gt;</span> — launch a game</li>
 <li><span class="tt">GET /api/install?name=&lt;name-or-number&gt;</span> — install a game</li>
+<li><span class="tt">GET /api/status?after=&lt;index&gt;</span> — poll launch/install results (the UI polls this every second)</li>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
 Tray (<span class="tt">--tray</span>)</h2>

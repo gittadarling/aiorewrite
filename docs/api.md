@@ -87,7 +87,7 @@ back to the module name as package name.
 | `tui_pygame_version_menu(stdscr)` | pygame version manager |
 | `tui_pypi_launch_menu(stdscr)` | install-by-name prompt |
 | `run_gui()` | tkinter notebook window |
-| `run_wui(port=8080)` | HTTP server + web UI + JSON API |
+| `run_wui(port=8080)` | HTTP server + web UI + JSON API (launch/install/status) |
 | `run_taskbar()` | pystray tray icon + menu |
 | `_spawn_mode(flag)` | spawn a fresh instance of a mode (subprocess) |
 | `create_image()` | tray icon image |

@@ -88,11 +88,13 @@ Browser**, **Exit**.
 
 ### WUI (`--wui [port]`)
 Serves four cards (one per source, click any item to launch) plus a name/number
-input with Launch / Install buttons.
+input with Launch / Install buttons. Results stream live into the status pane.
 
 - `GET /` — the UI
 - `GET /api/launch?name=<name-or-number>` — launch a game
 - `GET /api/install?name=<name-or-number>` — install a game
+- `GET /api/status?after=<index>` — poll launch/install results (the UI polls
+  this every second)
 
 ### Tray (`--tray`)
 pystray menu: Launch CLI / TUI / GUI / WUI (each in a fresh process), Launch

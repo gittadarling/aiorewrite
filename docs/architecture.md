@@ -85,7 +85,8 @@ run_with_auto_install(cmd)
 - **GUI** — tkinter ttk notebook, one tab per source; launch/install run on a
   worker thread so the UI stays responsive.
 - **WUI** — stdlib `http.server`/`socketserver` (no dependencies); card list
-  + `/api/launch` + `/api/install`. Port from `--wui <port>`, default 8080.
+  + `/api/launch` + `/api/install` + `/api/status` (live result streaming).
+  Port from `--wui <port>`, default 8080.
 - **Tray** — pystray; every "Launch <mode>" item calls `_spawn_mode()` which
   re-invokes the app (`sys.argv[0]`) with the corresponding flag in a new
   process, so each mode is independent.

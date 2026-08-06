@@ -1,6 +1,7 @@
 var aio_8py =
 [
     [ "aio._cached_fetch", "namespaceaio.html#a6827788891fdb715416e7ec15b6fecca", null ],
+    [ "aio._is_runnable_module", "namespaceaio.html#a1a62e3024d2fd1988fca177662e892b6", null ],
     [ "aio._load_cache", "namespaceaio.html#a9fe5cdfaa03316bcb05b8e919006ee4e", null ],
     [ "aio._save_cache", "namespaceaio.html#af84d72f649f6a0aa78ba8687edc01365", null ],
     [ "aio._script_pygame_score", "namespaceaio.html#a56a34df7efaf63752955e8995e6c78e7", null ],
@@ -12,6 +13,7 @@ var aio_8py =
     [ "aio.fetch_github_pygame_repos", "namespaceaio.html#addba1a4d7548da01e5b79033c652c9e9", null ],
     [ "aio.fetch_pypi_public_games", "namespaceaio.html#aa1d73d448728e98a9f9ab0ead4df7d22", null ],
     [ "aio.find_entry_point", "namespaceaio.html#afb8fbc257967a14366fd41f77bf9f211", null ],
+    [ "aio.find_module_name", "namespaceaio.html#aba92b7dd95a76a80b075e9f26f00790b", null ],
     [ "aio.get_available_public_games", "namespaceaio.html#aafc4c38f20cce9bacca9185859260808", null ],
     [ "aio.get_available_pygame_versions", "namespaceaio.html#a70082ca050319ae03b246b89b4ec7ff5", null ],
     [ "aio.get_installed_pygame_examples", "namespaceaio.html#a66dc4520dd435b5a1d38c6cffb45578f", null ],
