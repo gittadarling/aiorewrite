@@ -135,7 +135,8 @@ Launch resolution</h1>
 <div class="line"> └─ (unresolved) → run_pygame_launcher(ref)  [URL / local file / builtin name]</div>
 <div class="line"> </div>
 <div class="line">clone_and_run_repo()</div>
-<div class="line"> ├─ git clone</div>
+<div class="line"> ├─ _checkout()  git clone into ~/testpkg/&lt;owner&gt;__&lt;repo&gt; (created on first run;</div>
+<div class="line"> │               existing checkouts updated with git pull)</div>
 <div class="line"> ├─ install requirements.txt (if any)</div>
 <div class="line"> ├─ find_entry_point()   root scripts → apps/examples/demo/samples (scored)</div>
 <div class="line"> └─ run_with_auto_install()  auto-install missing modules, retry once</div>

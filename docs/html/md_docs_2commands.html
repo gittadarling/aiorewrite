@@ -152,9 +152,9 @@ Launch semantics</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">pypi</span>  </td><td class="markdownTableBodyNone">ensure installed, then <span class="tt">python -m &lt;pkg&gt;</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">github</span> / <span class="tt">awesome</span>  </td><td class="markdownTableBodyNone">clone + <span class="tt">find_entry_point</span> + run  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">github</span> / <span class="tt">awesome</span>  </td><td class="markdownTableBodyNone">clone into <span class="tt">~/testpkg/</span> (created on first run; <span class="tt">git pull</span> on re-run) + <span class="tt">find_entry_point</span> + run  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">URL / local file  </td><td class="markdownTableBodyNone">clone-and-run, or run directly  </td></tr>
+<td class="markdownTableBodyNone">URL / local file  </td><td class="markdownTableBodyNone">clone-and-run (into <span class="tt">~/testpkg/</span>), or run directly  </td></tr>
 </table>
 <p>Missing modules are auto-installed via <span class="tt">run_with_auto_install</span> and the launch is retried once.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md10"></a>

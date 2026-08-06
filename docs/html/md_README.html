@@ -145,9 +145,10 @@ Launching</h1>
 <ul>
 <li><b>Built-in</b> → <span class="tt">python -m pygame.examples.&lt;name&gt;</span></li>
 <li><b>PyPI</b> → ensures the package is installed, then <span class="tt">python -m &lt;pkg&gt;</span></li>
-<li><b>GitHub / awesome</b> → clones the repo, finds a runnable entry point (root scripts, then <span class="tt">apps/</span>, <span class="tt">examples/</span>, <span class="tt">demo/</span>, <span class="tt">samples/</span> — scored by pygame usage), and runs it</li>
-<li><b>URL / local file</b> → clone-and-run, or run the script directly</li>
+<li><b>GitHub / awesome</b> → clones the repo into <span class="tt">~/testpkg/</span> (created on first run; existing checkouts are updated with <span class="tt">git pull</span>), finds a runnable entry point (root scripts, then <span class="tt">apps/</span>, <span class="tt">examples/</span>, <span class="tt">demo/</span>, <span class="tt">samples/</span> — scored by pygame usage), and runs it</li>
+<li><b>URL / local file</b> → clone-and-run (into <span class="tt">~/testpkg/</span>), or run the script directly</li>
 </ul>
+<p><span class="tt"><a class="el" href="aio_8py.html">aio.py</a> install &lt;name-or-number&gt;</span> of a GitHub/awesome entry clones it into <span class="tt">~/testpkg/</span> too, then installs it (requirements + package).</p>
 <p>Missing modules are <b>auto-installed</b> (<span class="tt">pyopengl</span>, <span class="tt">numpy</span>, <span class="tt">pillow</span>, <span class="tt">opencv-python</span>, …) and the game is retried once.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
 CLI actions</h1>

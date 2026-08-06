@@ -235,6 +235,8 @@ def run_cli(args):
     print(f" - Cython   (Build)  : {'Available' if HAS_CYTHON else 'Not Available'}")
     print("========================================")
     
+    ensure_testpkg()
+    
     action = (args.action or "list").lower()
     if action in ("help", "list", "games"):
         list_public_games()
@@ -985,33 +987,73 @@ def find_entry_point(repo_dir):
             return c
     return None
 
-def clone_and_run_repo(repo_url):
-    print(f"Cloning repository {repo_url}...")
-    temp_dir = tempfile.mkdtemp(prefix="aio_pygame_")
-    
+TESTPKG_DIR = os.path.expanduser("~/testpkg")
+
+def ensure_testpkg():
+    """Create the persistent checkout directory ~/testpkg on first use."""
+    if not os.path.isdir(TESTPKG_DIR):
+        os.makedirs(TESTPKG_DIR, exist_ok=True)
+        print(f"Created {TESTPKG_DIR} for repository checkouts.")
+    return TESTPKG_DIR
+
+def _repo_slug(repo_url):
+    """Map a git URL to a stable directory name under ~/testpkg."""
     try:
-        subprocess.run(["git", "clone", repo_url, temp_dir], check=True)
-        
-        req_file = os.path.join(temp_dir, "requirements.txt")
-        if os.path.exists(req_file):
-            print("Found requirements.txt, installing...")
-            subprocess.run([PYTHON_EXE, "-m", "pip", "install", "-r", req_file])
-            
-        target = find_entry_point(temp_dir)
-        if target is not None:
-            rel = os.path.relpath(target, temp_dir)
-            print(f"Found entry point {rel}, launching...")
-            run_with_auto_install([PYTHON_EXE, target], os.path.basename(target), cwd=temp_dir)
-        else:
-            print("No runnable entry point found in the repository "
-                  "(this is likely a library, not a standalone game).")
-            print("Try: aio.py install <name-or-number> to install it as a Python package.")
-            
+        from urllib.parse import urlparse
+        u = repo_url if "://" in repo_url else "https://" + repo_url
+        path = urlparse(u).path.rstrip("/")
+    except Exception:
+        path = repo_url
+    if path.endswith(".git"):
+        path = path[:-4]
+    parts = [p for p in path.lstrip("/").split("/") if p]
+    if len(parts) >= 2:
+        return "__".join(parts[-2:])
+    return parts[-1] if parts else "repo"
+
+def _checkout(repo_url, shallow=False):
+    """Ensure the repo is checked out in ~/testpkg, cloning or pulling."""
+    ensure_testpkg()
+    slug = _repo_slug(repo_url)
+    target_dir = os.path.join(TESTPKG_DIR, slug)
+    if os.path.isdir(os.path.join(target_dir, ".git")):
+        print(f"Already checked out at {target_dir}; pulling latest ...")
+        subprocess.run(["git", "-C", target_dir, "pull"], check=False)
+    else:
+        print(f"Cloning repository {repo_url} -> {target_dir} ...")
+        cmd = ["git", "clone", repo_url, target_dir]
+        if shallow:
+            cmd.insert(2, "--depth")
+            cmd.insert(3, "1")
+        os.makedirs(target_dir, exist_ok=True)
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            shutil.rmtree(target_dir, ignore_errors=True)
+            raise e
+    return target_dir
+
+def clone_and_run_repo(repo_url):
+    try:
+        target_dir = _checkout(repo_url)
     except subprocess.CalledProcessError as e:
-        print(f"Error during cloning or execution: {e}")
-    finally:
-        shutil.rmtree(temp_dir, ignore_errors=True)
-        print("Cleaned up temporary directory.")
+        print(f"Error during cloning: {e}")
+        return
+
+    req_file = os.path.join(target_dir, "requirements.txt")
+    if os.path.exists(req_file):
+        print("Found requirements.txt, installing...")
+        subprocess.run([PYTHON_EXE, "-m", "pip", "install", "-r", req_file], check=False)
+
+    target = find_entry_point(target_dir)
+    if target is not None:
+        rel = os.path.relpath(target, target_dir)
+        print(f"Found entry point {rel}, launching...")
+        run_with_auto_install([PYTHON_EXE, target], os.path.basename(target), cwd=target_dir)
+    else:
+        print("No runnable entry point found in the repository "
+              "(this is likely a library, not a standalone game).")
+        print("Try: aio.py install <name-or-number> to install it as a Python package.")
 
 def run_pygame_launcher(target):
     print(f"--- Pygame Launcher: Preparing to launch '{target}' ---")
@@ -1114,23 +1156,21 @@ def launch_game(ref):
 
 
 def install_repo(repo_url):
-    """Clone a git repository and install it (requirements.txt + setup)."""
-    print(f"Cloning repository {repo_url} ...")
-    temp_dir = tempfile.mkdtemp(prefix="aio_install_")
+    """Clone a git repository into ~/testpkg and install it (requirements.txt + setup)."""
+    print(f"Installing via git from {repo_url} into {TESTPKG_DIR} ...")
     try:
-        subprocess.run(["git", "clone", "--depth", "1", repo_url, temp_dir], check=True)
-        req_file = os.path.join(temp_dir, "requirements.txt")
-        if os.path.exists(req_file):
-            print("Found requirements.txt, installing dependencies...")
-            subprocess.run([PYTHON_EXE, "-m", "pip", "install", "-r", req_file], check=False)
-        print("Installing package...")
-        result = subprocess.run([PYTHON_EXE, "-m", "pip", "install", temp_dir], check=False)
-        if result.returncode != 0:
-            print("No installable setup.py - requirements above were installed; run with: aio.py launch <repo-url>")
+        target_dir = _checkout(repo_url, shallow=True)
     except subprocess.CalledProcessError as e:
-        print(f"Failed to clone/install repository: {e}")
-    finally:
-        shutil.rmtree(temp_dir, ignore_errors=True)
+        print(f"Failed to clone repository: {e}")
+        return
+    req_file = os.path.join(target_dir, "requirements.txt")
+    if os.path.exists(req_file):
+        print("Found requirements.txt, installing dependencies...")
+        subprocess.run([PYTHON_EXE, "-m", "pip", "install", "-r", req_file], check=False)
+    print("Installing package...")
+    result = subprocess.run([PYTHON_EXE, "-m", "pip", "install", target_dir], check=False)
+    if result.returncode != 0:
+        print("No installable setup.py - requirements above were installed; run with: aio.py launch <repo-url>")
 
 
 def run_install(args):

@@ -54,7 +54,8 @@ launch_game(ref)
  └─ (unresolved) → run_pygame_launcher(ref)  [URL / local file / builtin name]
 
 clone_and_run_repo()
- ├─ git clone
+ ├─ _checkout()  git clone into ~/testpkg/<owner>__<repo> (created on first run;
+ │               existing checkouts updated with git pull)
  ├─ install requirements.txt (if any)
  ├─ find_entry_point()   root scripts → apps/examples/demo/samples (scored)
  └─ run_with_auto_install()  auto-install missing modules, retry once

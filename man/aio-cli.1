@@ -77,11 +77,16 @@ Built-in examples run with
 .BR "python -m pygame.examples.<name>" .
 PyPI packages are installed on demand and run with
 .BR "python -m <pkg>" .
-GitHub and awesome entries are cloned into a temporary directory; if a
-runnable entry point exists it is executed, otherwise the repository is
+GitHub and awesome entries are cloned into
+.BR ~/testpkg " (created on first run); "
+if a runnable entry point exists it is executed, otherwise the repository is
 reported as a library and
 .B install
-is suggested.
+is suggested. Existing checkouts are updated with
+.BR "git pull" ,
+and
+.B install
+of a repository clones it into the same directory before installing.
 .PP
 Missing modules are auto-installed (pyopengl, numpy, pillow,
 opencv-python, ...) and the launch retried once.

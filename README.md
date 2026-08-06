@@ -53,10 +53,15 @@ binary; run once online, use forever offline.
 
 - **Built-in** → `python -m pygame.examples.<name>`
 - **PyPI** → ensures the package is installed, then `python -m <pkg>`
-- **GitHub / awesome** → clones the repo, finds a runnable entry point
-  (root scripts, then `apps/`, `examples/`, `demo/`, `samples/` — scored by
-  pygame usage), and runs it
-- **URL / local file** → clone-and-run, or run the script directly
+- **GitHub / awesome** → clones the repo into `~/testpkg/` (created on first
+  run; existing checkouts are updated with `git pull`), finds a runnable entry
+  point (root scripts, then `apps/`, `examples/`, `demo/`, `samples/` — scored
+  by pygame usage), and runs it
+- **URL / local file** → clone-and-run (into `~/testpkg/`), or run the script
+  directly
+
+`aio.py install <name-or-number>` of a GitHub/awesome entry clones it into
+`~/testpkg/` too, then installs it (requirements + package).
 
 Missing modules are **auto-installed** (`pyopengl`, `numpy`, `pillow`,
 `opencv-python`, …) and the game is retried once.

@@ -45,8 +45,8 @@ Unknown actions print `Unknown action: <name>` and exit.
 | --- | --- |
 | `builtin` | `python -m pygame.examples.<name>` |
 | `pypi` | ensure installed, then `python -m <pkg>` |
-| `github` / `awesome` | clone + `find_entry_point` + run |
-| URL / local file | clone-and-run, or run directly |
+| `github` / `awesome` | clone into `~/testpkg/` (created on first run; `git pull` on re-run) + `find_entry_point` + run |
+| URL / local file | clone-and-run (into `~/testpkg/`), or run directly |
 
 Missing modules are auto-installed via `run_with_auto_install` and the launch
 is retried once.

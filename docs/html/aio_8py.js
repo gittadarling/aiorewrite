@@ -1,14 +1,17 @@
 var aio_8py =
 [
     [ "aio._cached_fetch", "namespaceaio.html#a6827788891fdb715416e7ec15b6fecca", null ],
+    [ "aio._checkout", "namespaceaio.html#ab77ea6a621002bb61c72196a629e7211", null ],
     [ "aio._is_runnable_module", "namespaceaio.html#a1a62e3024d2fd1988fca177662e892b6", null ],
     [ "aio._load_cache", "namespaceaio.html#a9fe5cdfaa03316bcb05b8e919006ee4e", null ],
+    [ "aio._repo_slug", "namespaceaio.html#a7ad5743aae8ba6f4a3ac2466e3aecbaa", null ],
     [ "aio._save_cache", "namespaceaio.html#af84d72f649f6a0aa78ba8687edc01365", null ],
     [ "aio._script_pygame_score", "namespaceaio.html#a56a34df7efaf63752955e8995e6c78e7", null ],
     [ "aio._spawn_mode", "namespaceaio.html#a6d55dfd724e5bbd419565981acd7ad25", null ],
     [ "aio.clone_and_run_repo", "namespaceaio.html#a472c9ea8c8e3a3bd255907b6ab13c91d", null ],
     [ "aio.create_image", "namespaceaio.html#a64e0696c2a4793803d33f846b929de51", null ],
     [ "aio.ensure_package", "namespaceaio.html#a5177115df9271d7b695a6d29b93716cf", null ],
+    [ "aio.ensure_testpkg", "namespaceaio.html#a49ad571298ce38aa2017fb607082fa6f", null ],
     [ "aio.fetch_awesome_pygame_repos", "namespaceaio.html#a4e2e712a7ff3be50e9f48ec3fb2d58cf", null ],
     [ "aio.fetch_github_pygame_repos", "namespaceaio.html#addba1a4d7548da01e5b79033c652c9e9", null ],
     [ "aio.fetch_pypi_public_games", "namespaceaio.html#aa1d73d448728e98a9f9ab0ead4df7d22", null ],
@@ -62,5 +65,6 @@ var aio_8py =
     [ "aio.path", "namespaceaio.html#a269a647912cbb20709935ca5a6be57cc", null ],
     [ "aio.PYGAME_EXAMPLES", "namespaceaio.html#ad33a40054c99d8fc3d6a34ad6ea01dd3", null ],
     [ "aio.PYSTRAY_ERROR", "namespaceaio.html#ad8fbd0d2edd7e51b25e13ab84607a7f4", null ],
-    [ "aio.PYTHON_EXE", "namespaceaio.html#a7eb95c631b04d480d75cc64a3826a5b8", null ]
+    [ "aio.PYTHON_EXE", "namespaceaio.html#a7eb95c631b04d480d75cc64a3826a5b8", null ],
+    [ "aio.TESTPKG_DIR", "namespaceaio.html#a0166b189d133131dbcfaab71fecbea10", null ]
 ];
