@@ -1,0 +1,43 @@
+.TH AIO-GUI 1 "August 2026" "aio 0.1.0" "User Commands"
+.SH NAME
+aio-gui \- aio graphical user interface (tkinter)
+.SH SYNOPSIS
+.B aio --gui
+.SH DESCRIPTION
+Opens a tkinter window with a notebook of four tabs, one per game source,
+each titled with its entry count:
+.TP
+.B Built-in
+pygame example games.
+.TP
+.B PyPI
+pygame packages.
+.TP
+.B GitHub
+pygame repositories (top by stars).
+.TP
+.B Awesome
+the curated awesome-pygame list.
+.SH BUTTONS
+.TP
+.B System Doctor
+Runs the diagnostics and shows component availability.
+.TP
+.B Launch Selected
+Launches the currently selected entry in a worker thread.
+.TP
+.B Install Selected
+Installs the currently selected entry (PyPI packages via pip, GitHub and
+awesome entries by cloning).
+.TP
+.B Open in Browser
+Opens a relevant web page for the selection.
+.TP
+.B Exit
+Closes the window.
+.SH SEE ALSO
+.BR aio (1),
+.BR aio-wui (1),
+.BR aio-suite (7)
+.SH AUTHOR
+Jimmy + opencode

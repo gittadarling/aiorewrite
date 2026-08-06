@@ -254,6 +254,8 @@ def run_cli(args):
         run_build(args.args)
     elif action == "jinja":
         run_jinja(args.args)
+    elif action == "docs":
+        run_docs(args.args)
     else:
         print(f"Unknown action: {action}")
 
@@ -1256,6 +1258,57 @@ def run_wui(port=8080):
             httpd.serve_forever()
         except KeyboardInterrupt:
             print("\\nShutting down Web UI...")
+
+
+# ========================================================================
+# DOCS GENERATION
+# ========================================================================
+def run_docs(args):
+    """Regenerate documentation: doxygen HTML + install man pages."""
+    sub = (args[0] if args else "all").lower()
+    root = _exe_dir
+    done = []
+
+    def _doxygen():
+        doxyfile = os.path.join(root, "Doxyfile")
+        if not os.path.exists(doxyfile):
+            print("Doxyfile not found; skipping doxygen.")
+            return
+        print("Running doxygen ...")
+        result = subprocess.run(["doxygen", doxyfile], cwd=root)
+        if result.returncode == 0:
+            done.append("docs/html")
+        return result.returncode
+
+    def _man():
+        mandir = os.path.expanduser("~/.local/share/man")
+        man_src = os.path.join(root, "man")
+        if not os.path.isdir(man_src):
+            print("man/ not found; skipping man install.")
+            return
+        os.makedirs(os.path.join(mandir, "man1"), exist_ok=True)
+        os.makedirs(os.path.join(mandir, "man7"), exist_ok=True)
+        for page in sorted(os.listdir(man_src)):
+            if page.endswith((".1", ".7")):
+                shutil.copy2(os.path.join(man_src, page), os.path.join(mandir, f"man{page[-1]}", page))
+        done.append("man -> " + mandir)
+
+    if sub in ("doxygen",):
+        return _doxygen()
+    if sub in ("man",):
+        _man()
+        return 0
+    if sub in ("markdown", "md", "html"):
+        print("commands.md / api.md / architecture.md / INDEX.md are hand-written; "
+              "regenerate HTML with `doxygen Doxyfile`.")
+        return 0
+    if sub in ("all",):
+        _doxygen()
+        _man()
+        print("See docs/INDEX.md for the documentation and build map.")
+        return 0
+    print("Usage: aio.py docs <doxygen|man|markdown|html|all>")
+    return 1
 
 
 # ========================================================================

@@ -1,0 +1,106 @@
+.TH AIO-SUITE 7 "August 2026" "aio 0.1.0" "Miscellaneous"
+.SH NAME
+aio-suite \- the All-In-One Pygame Launcher suite
+.SH DESCRIPTION
+.B aio
+is a single-file application that discovers every public pygame game and
+launches or installs any of them by name or listing number. The suite
+comprises five interfaces built on one catalogue:
+.PP
+.RS
+.nf
++-------------------- aio --------------------+
+|                                             |
+|  catalogue                                  |
+|   built-in (39)  PyPI (347)                 |
+|   GitHub (163)   awesome (12)   = 561 total |
+|         |                                   |
+|   +-----+------+------+------+------+       |
+|   | CLI | TUI  | GUI  | WUI  | Tray |       |
+|   +-----+------+------+------+------+       |
+|         |                                   |
+|  launch / install                           |
+|   python -m  |  pip install  |  git clone   |
++---------------------------------------------+
+.fi
+.RE
+.SH GAME SOURCES
+.TP
+.B Built-in
+pygame example games (1-39).
+.TP
+.B PyPI
+pygame packages scanned from the pypi.org simple index (40-386).
+.TP
+.B GitHub
+pygame repositories, top by stars (387-549).
+.TP
+.B Awesome
+the curated awesome-pygame list (550-561).
+.PP
+Listings are cached in
+.B pygame_games_cache.json
+(PyPI 7 days, GitHub 24 hours, awesome 7 days).
+.SH INTERFACES
+.TP
+.B CLI
+Default interface; numbered catalogue plus
+.IR list ,
+.IR launch ,
+.IR install ,
+.IR doctor ,
+.IR build ,
+.IR jinja
+and
+.IR docs
+actions. See
+.BR aio-cli (1).
+.TP
+.B TUI
+Curses menus for every source and an install prompt. See
+.BR aio-tui (1).
+.TP
+.B GUI
+tkinter notebook with one tab per source. See
+.BR aio-gui (1).
+.TP
+.B WUI
+Web UI plus a JSON API on localhost (default port 8080). See
+.BR aio-wui (1).
+.TP
+.B Tray
+pystray icon that spawns any interface. See
+.BR aio-tray (1).
+.SH BUILD
+.RS
+.nf
+venv-build.sh  ->  cython --embed -3 aio.py  ->  gcc -O3  ->  aio_bin
+.fi
+.RE
+The compiled binary resolves the venv Python at runtime and injects the venv
+site-packages, so the toolchain works from one artifact. See
+.BR aio (1).
+.SH DOCUMENTATION
+.TP
+.B docs/INDEX.md
+the documentation and build map (start here).
+.TP
+.B README.md
+the top-level guide.
+.TP
+.B docs/html/
+Doxygen API reference.
+.PP
+Regenerate with
+.BR "aio docs all"
+or
+.BR "build-docs.sh" .
+.SH SEE ALSO
+.BR aio (1),
+.BR aio-cli (1),
+.BR aio-tui (1),
+.BR aio-gui (1),
+.BR aio-wui (1),
+.BR aio-tray (1)
+.SH AUTHOR
+Jimmy + opencode

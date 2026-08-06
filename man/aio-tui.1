@@ -1,0 +1,49 @@
+.TH AIO-TUI 1 "August 2026" "aio 0.1.0" "User Commands"
+.SH NAME
+aio-tui \- aio text user interface (curses)
+.SH SYNOPSIS
+.B aio --tui
+.SH DESCRIPTION
+Launches the full-screen curses interface. A shared picker
+.RB ( tui_pick )
+backs every list: use arrow keys to move and Enter to launch the selected
+game.
+.SH KEYS
+.TP
+.B l , b
+Open the built-in pygame examples list.
+.TP
+.B p
+Open the PyPI packages list.
+.TP
+.B g
+Open the GitHub repos list.
+.TP
+.B a
+Open the awesome-pygame list.
+.TP
+.B i
+Prompt for a package name and launch it from PyPI.
+.TP
+.B v
+Open the pygame version manager (install a specific pygame version).
+.TP
+.B q
+Quit.
+.PP
+Within a list, arrows move, Enter launches, Esc or q returns to the main
+menu.
+.SH LAUNCHING
+Selecting an entry launches it exactly as the CLI would: built-in examples
+via
+.BR "python -m pygame.examples.<name>" ,
+PyPI packages via
+.BR "python -m <pkg>" ,
+and GitHub/awesome repositories by cloning and locating an entry point.
+Missing modules are auto-installed and the launch retried once.
+.SH SEE ALSO
+.BR aio (1),
+.BR aio-cli (1),
+.BR aio-suite (7)
+.SH AUTHOR
+Jimmy + opencode

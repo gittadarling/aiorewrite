@@ -1,0 +1,96 @@
+.TH AIO-CLI 1 "August 2026" "aio 0.1.0" "User Commands"
+.SH NAME
+aio-cli \- aio command line interface
+.SH SYNOPSIS
+.B aio
+.RB [ \-\-cli ]
+.RI [ action ]
+.RI [ argument ...]
+.SH DESCRIPTION
+The CLI is the default interface. With no arguments it prints the numbered
+catalogue of all available public pygame games:
+.PP
+.B "aio" \fR→ prints "Built-in / PyPI / GitHub / Awesome" sections and the total.
+.PP
+Every game is identified by a continuous number (built-in 1-39, PyPI
+40-386, GitHub 387-549, awesome 550-561) as well as a name; both work for
+launch and install.
+.SH ACTIONS
+.TP
+.BR list " / " games " / " help
+Print the catalogue.
+.TP
+.BR launch " " name-or-number
+Launch a game. Examples:
+.br
+.B aio launch aliens
+.RS
+built-in pygame example
+.RE
+.br
+.B aio launch 163
+.RS
+launch by number (PyPI package)
+.RE
+.br
+.B aio launch https://github.com/user/repo.git
+.RS
+clone-and-run a repository
+.RE
+.TP
+.BR install " " target
+Install a game by name or number, a git repository, or a requirements file.
+Examples:
+.br
+.B aio install 550
+.RS
+install pyscroll (awesome list) via pip
+.RE
+.br
+.B aio install -r requirements.txt
+.RS
+install a requirements file
+.RE
+.TP
+.BR doctor
+Print component availability (curses, tkinter, pystray, jinja2, cython).
+.TP
+.BR build " " system " " [ args ]
+Build integration:
+.IR cython " file.py" ,
+.IR cmake " source_dir build_dir" ,
+.IR ninja " build_dir" ,
+.IR meson " build_dir source_dir" ,
+.IR cargo " [target]" .
+.TP
+.BR jinja " " ...
+Jinja2 templating helpers.
+.TP
+.BR docs " " format
+Regenerate documentation:
+.IR markdown ", " html ", " man ", " doxygen ", " all .
+.TP
+.BR hello " [" name ]
+Echo demo.
+.SH LAUNCH / INSTALL SEMANTICS
+Built-in examples run with
+.BR "python -m pygame.examples.<name>" .
+PyPI packages are installed on demand and run with
+.BR "python -m <pkg>" .
+GitHub and awesome entries are cloned into a temporary directory; if a
+runnable entry point exists it is executed, otherwise the repository is
+reported as a library and
+.B install
+is suggested.
+.PP
+Missing modules are auto-installed (pyopengl, numpy, pillow,
+opencv-python, ...) and the launch retried once.
+.SH EXIT STATUS
+0 on success, 1 on operational errors (unknown action, missing argument,
+failed launch or install), 130 when interrupted.
+.SH SEE ALSO
+.BR aio (1),
+.BR aio-tui (1),
+.BR aio-suite (7)
+.SH AUTHOR
+Jimmy + opencode

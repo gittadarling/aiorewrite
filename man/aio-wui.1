@@ -1,0 +1,46 @@
+.TH AIO-WUI 1 "August 2026" "aio 0.1.0" "User Commands"
+.SH NAME
+aio-wui \- aio web user interface
+.SH SYNOPSIS
+.B aio --wui
+.RI [ port ]
+.SH DESCRIPTION
+Serves the web interface and JSON API on localhost. The default port is
+8080; pass a port as the first argument to override it
+.RB ( "aio --wui 8090" ).
+.SH WEB UI
+Four cards, one per game source:
+.TP
+.B Built-in Pygame Games
+example games, click to launch.
+.TP
+.B PyPI Pygame Packages
+packages, click to launch.
+.TP
+.B GitHub Pygame Repos
+repositories with star counts, click to launch.
+.TP
+.B Awesome Pygame List
+curated repositories, click to launch.
+.PP
+A control panel provides a name/number input with
+.B Launch
+and
+.B Install
+buttons.
+.SH ENDPOINTS
+.TP
+.B GET /
+The web UI.
+.TP
+.B GET /api/launch?name=<name-or-number>
+Launch the named or numbered game and return a message.
+.TP
+.B GET /api/install?name=<name-or-number>
+Install the named or numbered game and return a message.
+.SH SEE ALSO
+.BR aio (1),
+.BR aio-gui (1),
+.BR aio-suite (7)
+.SH AUTHOR
+Jimmy + opencode

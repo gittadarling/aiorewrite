@@ -1,0 +1,40 @@
+.TH AIO-TRAY 1 "August 2026" "aio 0.1.0" "User Commands"
+.SH NAME
+aio-tray \- aio system tray launcher (pystray)
+.SH SYNOPSIS
+.B aio --tray
+.SH DESCRIPTION
+Places an icon in the system tray. Each
+.B Launch
+item spawns a fresh aio process
+.RB ( _spawn_mode )
+running the selected interface, so every mode is independent and can be
+quit without affecting the tray.
+.SH MENU
+.TP
+.B Launch CLI
+Spawns the default command line interface (catalogue list).
+.TP
+.B Launch TUI
+Spawns the curses interface.
+.TP
+.B Launch GUI
+Spawns the tkinter interface.
+.TP
+.B Launch WUI
+Spawns the web interface on the default port.
+.TP
+.B Launch Pygame (Alien)
+Launches the bundled pygame "aliens" example directly.
+.TP
+.B Help
+Spawns a process that prints the usage text.
+.TP
+.B Quit
+Exits the tray application.
+.SH SEE ALSO
+.BR aio (1),
+.BR aio-gui (1),
+.BR aio-suite (7)
+.SH AUTHOR
+Jimmy + opencode

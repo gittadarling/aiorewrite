@@ -1,0 +1,154 @@
+.TH AIO 1 "August 2026" "aio 0.1.0" "User Commands"
+.SH NAME
+aio, aio_bin, aiorewrite \- All-In-One Pygame Launcher
+.SH SYNOPSIS
+.B aio
+.RI [ " \-\-cli | \-\-tui | \-\-gui | \-\-wui " \fR[\fI port \fR] " | \-\-tray " ]
+.br
+.B aio
+.RI [ action ]
+.RI [ argument ...]
+.br
+.B aio
+.B \-h, \-\-help
+.SH DESCRIPTION
+.B aio
+is a single-file application that discovers every public pygame game
+(built-in examples, PyPI packages, GitHub repos and the awesome-pygame list)
+and launches or installs any of them by name or listing number, through five
+interfaces: CLI, TUI, GUI, WUI and system tray.
+.PP
+Run without arguments (or with
+.B \-\-cli
+) to list the numbered catalogue. Help is printed only for
+.B \-h
+or
+.BR \-\-help .
+The application runs from source
+.RB ( aio.py )
+or as a standalone native binary
+.RB ( aio_bin ),
+built with Cython and gcc.
+.SH MODES
+.TP
+.B \-\-cli
+Command line interface (the default). Lists the catalogue and runs actions.
+.TP
+.B \-\-tui
+Full-screen curses interface with per-source menus.
+.TP
+.B \-\-gui
+tkinter window with one tab per source.
+.TP
+.BI "\-\-wui [" port ]
+Web UI and JSON API; binds
+.IR port
+(default 8080) on localhost only.
+.TP
+.B \-\-tray
+System tray icon and menu (pystray).
+.SH CLI ACTIONS
+.TP
+.BR list " / " games " / " help
+Print the numbered catalogue of all available games.
+.TP
+.BR launch " " name-or-number
+Launch a game by name or listing number.
+.TP
+.BR install " " target
+Install a game by name or number, a git repository URL, or a requirements
+file (use
+.B \-r
+for an explicit requirements file).
+.TP
+.BR doctor
+Print system status for the optional components.
+.TP
+.BR build " " system " " [ args ]
+Build integration:
+.IR cython ,
+.IR cmake ,
+.IR ninja ,
+.IR meson
+or
+.IR cargo .
+.TP
+.BR jinja " " ...
+Jinja2 templating helpers.
+.TP
+.BR docs " " format
+Regenerate documentation:
+.IR markdown ,
+.IR html ,
+.IR man ,
+.IR doxygen
+or
+.IR all .
+.TP
+.BR hello " [" name ]
+Echo demo.
+.SH GAME SOURCES
+The catalogue is assembled from four sources, continuously numbered
+built-in 1-39, PyPI 40-386, GitHub 387-549 and awesome 550-561:
+.TP
+.B Built-in
+pygame example games shipped with the installed pygame.
+.TP
+.B PyPI
+pygame packages discovered by scanning the
+.IR pypi.org/simple/
+index.
+.TP
+.B GitHub
+pygame repositories from the GitHub search API, top by stars.
+.TP
+.B Awesome
+repositories from the curated awesome-pygame list.
+.PP
+Listings are cached in
+.B pygame_games_cache.json
+beside the executable (PyPI 7 days, GitHub 24 hours, awesome 7 days), so the
+catalogue works offline after one online run.
+.SH LAUNCH SEMANTICS
+.TP
+.B Built-in
+Run
+.B python -m pygame.examples.<name>.
+.TP
+.B PyPI
+Ensure the package is installed, then run
+.BR "python -m <pkg>" .
+.TP
+.B GitHub / awesome
+Clone the repository, install its requirements, locate a runnable entry
+point and execute it.
+.TP
+.B URL / local file
+Clone-and-run a git URL, or run a local script directly.
+.PP
+Missing modules are auto-installed through pip and the launch is retried
+once. Repositories with no runnable entry point (libraries such as
+.B pygame_gui
+or
+.B pyscroll
+) are reported as such; use
+.B install
+to install them as Python packages.
+.SH EXIT STATUS
+0 on success, 1 on operational errors, 130 when interrupted.
+.SH FILES
+.TP
+.B pygame_games_cache.json
+Cached source listings (beside the executable).
+.TP
+.B venv/
+Runtime environment used by the compiled binary.
+.SH SEE ALSO
+.BR aio-suite (7),
+.BR aio-cli (1),
+.BR aio-tui (1),
+.BR aio-gui (1),
+.BR aio-wui (1),
+.BR aio-tray (1)
+.SH AUTHOR
+Jimmy + opencode
